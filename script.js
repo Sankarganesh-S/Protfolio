@@ -1,27 +1,22 @@
-// Step 1: .reveal class உள்ள எல்லா elements-ஐ select பண்ணு
+// ─── SCROLL REVEAL ───────────────────────────────────────────
 const revealEls = document.querySelectorAll('.reveal');
 
-// Step 2: Observer create பண்ணு
 const observer = new IntersectionObserver(
   function(entries) {
     entries.forEach(function(entry) {
-
-      // Element screen-ல visible ஆனா?
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
       }
-
     });
   },
-  { threshold: 0.1 }   // 10% visible ஆனா trigger
+  { threshold: 0.1 }
 );
 
-// Step 3: ஒவ்வொரு element-ஐயும் observe பண்ணு
 revealEls.forEach(function(el) {
   observer.observe(el);
 });
 
-// Step 4: Smooth scroll — nav link click பண்ணா
+// ─── SMOOTH SCROLL ───────────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(function(link) {
   link.addEventListener('click', function(e) {
     e.preventDefault();
@@ -31,18 +26,35 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
     }
   });
 });
+
+// ─── FOOTER YEAR ─────────────────────────────────────────────
 const yearEl = document.getElementById('year');
 if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
 }
+
+// ─── MOBILE NAV TOGGLE ───────────────────────────────────────
 function toggleNav() {
   const nav = document.getElementById('navLinks');
-  nav.classList.toggle('open');
+  const icon = document.getElementById('hamIcon');
+  const isOpen = nav.classList.toggle('open');
+  icon.textContent = isOpen ? '✕' : '☰';
 }
 
-// Nav link click  auto-close 
-document.querySelectorAll('.nav-links a').forEach(function(link) {
-  link.addEventListener('click', function() {
-    document.getElementById('navLinks').classList.remove('open');
-  });
+function closeNav() {
+  const nav = document.getElementById('navLinks');
+  const icon = document.getElementById('hamIcon');
+  nav.classList.remove('open');
+  icon.textContent = '☰';
+}
+
+// Close nav when clicking outside
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('navLinks');
+  const btn = document.getElementById('hamburgerBtn');
+  if (nav && nav.classList.contains('open')) {
+    if (!nav.contains(e.target) && !btn.contains(e.target)) {
+      closeNav();
+    }
+  }
 });
